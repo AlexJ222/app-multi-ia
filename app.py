@@ -25,18 +25,36 @@ modelo_gemini = genai.GenerativeModel("gemini-2.5-flash")
 # 1. ANALIZADOR DE SENTIMIENTO
 # =========================
 
-clasificador_sentimiento = pipeline("sentiment-analysis")
+clasificador_sentimiento = pipeline(
+    "sentiment-analysis",
+    model="nlptown/bert-base-multilingual-uncased-sentiment"
+)
 
 def analizar_sentimiento(texto: str):
+
     if not texto.strip():
         return "Introduce un texto para analizar."
 
     resultado = clasificador_sentimiento(texto)[0]
 
-    etiqueta = resultado["label"]
+    estrellas = resultado["label"]
     confianza = round(resultado["score"] * 100, 2)
 
-    return f"Resultado: {etiqueta}\nConfianza: {confianza}%"
+    mapa_sentimiento = {
+        "1 star": "😡 Muy negativo",
+        "2 stars": "🙁 Negativo",
+        "3 stars": "😐 Neutral",
+        "4 stars": "🙂 Positivo",
+        "5 stars": "😄 Muy positivo"
+    }
+
+    sentimiento_final = mapa_sentimiento.get(estrellas, estrellas)
+
+    return (
+        f"Sentimiento detectado: {sentimiento_final}\n"
+        f"Puntuación del modelo: {estrellas}\n"
+        f"Confianza: {confianza}%"
+    )
 
 
 # =========================
