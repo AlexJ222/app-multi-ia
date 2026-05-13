@@ -1,4 +1,4 @@
-# App Multi-IA 🤖
+# App Multi-IA 
 
 ## Descripción del proyecto
 
